@@ -5,11 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Subhajit Chowdhury · Amazon FBA Analytics Portfolio</title>
 <meta name="description" content="Business Analyst portfolio — Amazon FBA data analysis, Power BI dashboards, and case studies by Subhajit Chowdhury."/>
-  <meta property="og:title" content="Subhajit Chowdhury | Business Analyst Portfolio"/>
-<meta property="og:description" content="Business Analyst | Amazon FBA Analytics | Power BI | SQL | Python | Excel"/>
-<meta property="og:image" content="https://subho907385-lang.github.io/Portfolio-/preview.png"/>
-<meta property="og:url" content="https://subho907385-lang.github.io/Portfolio-/"/>
-<meta property="og:type" content="website"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
 <style>
@@ -124,16 +119,36 @@ nav{position:sticky;top:0;z-index:100;background:rgba(247,246,242,.92);backdrop-
 svg.spark{width:100%;height:100%;}
 
 /* ── PROJECTS ─────────────────────────────────────────────── */
-.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-.proj-card{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:28px;position:relative;overflow:hidden;transition:box-shadow .2s,transform .2s;}
-.proj-card:hover{box-shadow:0 12px 40px rgba(0,0,0,.09);transform:translateY(-3px);}
+.proj-grid{display:flex;flex-direction:column;gap:14px;}
+.proj-card{background:#fff;border:1px solid var(--rule);border-radius:10px;position:relative;overflow:hidden;transition:box-shadow .2s;}
+.proj-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.07);}
 .proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--pc,var(--amazon));}
-.proj-tag{font-family:var(--mono);font-size:10px;color:var(--pc,var(--amazon));text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
-.proj-title{font-family:var(--display);font-size:18px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px;}
-.proj-desc{font-size:13px;color:#4a4846;line-height:1.6;margin-bottom:16px;}
-.proj-tools{display:flex;gap:6px;flex-wrap:wrap;}
+.proj-header{padding:20px 22px;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;user-select:none;-webkit-tap-highlight-color:transparent;}
+.proj-header-left{flex:1;}
+.proj-tag{font-family:var(--mono);font-size:10px;color:var(--pc,var(--amazon));text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;}
+.proj-title{font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:-.3px;margin-bottom:5px;}
+.proj-desc{font-size:12px;color:#4a4846;line-height:1.6;margin-bottom:8px;}
+.proj-tools{display:flex;gap:5px;flex-wrap:wrap;}
 .tool-chip{background:var(--mid);color:var(--ink);font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;letter-spacing:.3px;}
-.proj-result{margin-top:14px;padding:10px 14px;background:var(--green-lt);border-radius:5px;font-size:12px;color:var(--green);font-weight:500;}
+.tap-hint{font-size:10px;color:var(--pc,var(--amazon));font-family:var(--mono);margin-top:7px;opacity:.8;}
+.proj-chevron{flex-shrink:0;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--rule);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);transition:transform .3s,background .2s,border-color .2s;margin-top:2px;}
+.proj-card.open .proj-chevron{transform:rotate(180deg);background:var(--pc,var(--amazon));border-color:var(--pc,var(--amazon));color:#fff;}
+.proj-body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1);}
+.proj-card.open .proj-body{max-height:1400px;}
+.proj-inner{padding:0 22px 22px;border-top:1px solid var(--rule);}
+.assess-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;}
+.assess-item{background:var(--paper);border:1px solid var(--rule);border-radius:7px;padding:11px 13px;}
+.assess-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px;}
+.assess-val{font-size:12px;color:var(--ink);line-height:1.5;}
+.tools-section{margin-top:14px;}
+.tools-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.tools-title::after{content:'';flex:1;height:1px;background:var(--rule);}
+.tool-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--mid);font-size:12px;}
+.tool-row:last-child{border-bottom:none;}
+.tool-name{font-weight:600;min-width:120px;color:var(--ink);flex-shrink:0;}
+.tool-use{color:#5a5855;line-height:1.5;}
+.proj-result{margin-top:14px;padding:11px 14px;background:var(--green-lt);border-radius:6px;font-size:12px;color:var(--green);font-weight:500;line-height:1.5;}
+@media(max-width:600px){.assess-grid{grid-template-columns:1fr;}}
 
 /* ── ABOUT ─────────────────────────────────────────────────── */
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
@@ -512,90 +527,216 @@ footer a:hover{color:#fff;}
 <section class="section-wrap" id="projects">
   <div class="section-eyebrow">Business Analyst · Case Studies</div>
   <h2 class="section-title">Analytics <span>Projects</span></h2>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:28px;font-family:var(--mono);">👆 Tap any project to see the full assessment, tools & results</p>
 
   <div class="proj-grid">
 
-    <div class="proj-card reveal" style="--pc:var(--amazon)">
-      <div class="proj-tag">Dashboard · Power BI · Excel</div>
-      <div class="proj-title">Executive Business Dashboard</div>
-      <div class="proj-desc">Built a company-wide KPI dashboard tracking Revenue, Net Profit, Margin, Units Sold, Buy Box %, Conversion Rate, and Return Rate across 100,000+ transactions. Enabled real-time performance monitoring for senior leadership.</div>
-      <div class="proj-tools">
-        <span class="tool-chip">Power BI</span>
-        <span class="tool-chip">Advanced Excel</span>
-        <span class="tool-chip">Power Query</span>
-        <span class="tool-chip">XLOOKUP</span>
+    <!-- PROJECT 1 -->
+    <div class="proj-card reveal" style="--pc:var(--amazon)" onclick="toggleProject(this)">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <div class="proj-tag">Dashboard · Power BI · Excel</div>
+          <div class="proj-title">Executive Business Dashboard</div>
+          <div class="proj-desc">Company-wide KPI dashboard across 100,000+ transactions for senior leadership.</div>
+          <div class="proj-tools">
+            <span class="tool-chip">Power BI</span><span class="tool-chip">Advanced Excel</span><span class="tool-chip">Power Query</span><span class="tool-chip">XLOOKUP</span>
+          </div>
+          <div class="tap-hint">▼ Tap to see full assessment</div>
+        </div>
+        <div class="proj-chevron">▼</div>
       </div>
-      <div class="proj-result">📊 7 dashboards · 10 KPIs tracked · 18-month trend view</div>
+      <div class="proj-body">
+        <div class="proj-inner">
+          <div class="assess-grid">
+            <div class="assess-item"><div class="assess-label">🎯 Objective</div><div class="assess-val">Build a real-time KPI dashboard tracking 10 business metrics across all marketplaces for senior leadership decision-making.</div></div>
+            <div class="assess-item"><div class="assess-label">📦 Data Used</div><div class="assess-val">100,000 order records · Revenue, Profit, Units, Buy Box %, Conversion Rate, Return Rate, Inventory Value</div></div>
+            <div class="assess-item"><div class="assess-label">🔍 Methodology</div><div class="assess-val">Connected raw data via Power Query → Built calculated KPIs → Designed interactive visuals with slicers by marketplace, category, and date range.</div></div>
+            <div class="assess-item"><div class="assess-label">💡 Key Finding</div><div class="assess-val">Amazon US generated 59% of revenue. Q4 2024 was peak season with 31% MoM growth. Top 5 SKUs drove 42% of total revenue.</div></div>
+          </div>
+          <div class="tools-section">
+            <div class="tools-title">Tools & Usage</div>
+            <div class="tool-row"><span class="tool-name">Power BI</span><span class="tool-use">Built interactive dashboard with drill-through filters, KPI cards, and monthly trend line charts</span></div>
+            <div class="tool-row"><span class="tool-name">Advanced Excel</span><span class="tool-use">Data cleaning, Pivot Tables for category aggregation, XLOOKUP for product mapping</span></div>
+            <div class="tool-row"><span class="tool-name">Power Query</span><span class="tool-use">Automated data transformation pipeline — merged marketplace sheets, removed duplicates, standardised columns</span></div>
+            <div class="tool-row"><span class="tool-name">Power Pivot</span><span class="tool-use">Created data model relationships between Orders, Products, and Advertising tables</span></div>
+          </div>
+          <div class="proj-result">📊 Deliverable: 7-tab Excel workbook + Power BI report · 10 KPIs monitored · 18-month trend view · Reduced manual reporting from 3 hours to real-time</div><a href="dashboard-executive.html" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:var(--amazon);color:#fff;padding:9px 18px;border-radius:4px;font-size:12px;font-weight:600;text-decoration:none;transition:background .2s;" onmouseover="this.style.background='#c47700'" onmouseout="this.style.background='var(--amazon)'">📊 Open Executive Dashboard ↗</a>
+        </div>
+      </div>
     </div>
 
-    <div class="proj-card reveal" style="--pc:var(--teal)">
-      <div class="proj-tag">Inventory · Forecasting · Automation</div>
-      <div class="proj-title">Inventory Health & Reorder Optimisation</div>
-      <div class="proj-desc">Built inventory model analysing stock on hand, days of stock, FBA fees, and storage fees across 5 fulfilment centres. Introduced colour-coded reorder flags (Urgent / Reorder / OK) using daily sales velocity forecasting.</div>
-      <div class="proj-tools">
-        <span class="tool-chip">Power Query</span>
-        <span class="tool-chip">Excel</span>
-        <span class="tool-chip">Power BI</span>
-        <span class="tool-chip">Conditional Formatting</span>
+    <!-- PROJECT 2 -->
+    <div class="proj-card reveal" style="--pc:var(--teal)" onclick="toggleProject(this)">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <div class="proj-tag">Inventory · Forecasting · Automation</div>
+          <div class="proj-title">Inventory Health & Reorder Optimisation</div>
+          <div class="proj-desc">Eliminated stockout events causing $15K+ monthly revenue loss across 5 FBA warehouses.</div>
+          <div class="proj-tools">
+            <span class="tool-chip">Power Query</span><span class="tool-chip">Excel</span><span class="tool-chip">Power BI</span><span class="tool-chip">Python</span>
+          </div>
+          <div class="tap-hint">▼ Tap to see full assessment</div>
+        </div>
+        <div class="proj-chevron">▼</div>
       </div>
-      <div class="proj-result">✅ $18K/month revenue protected · Stockouts reduced by 23%</div>
+      <div class="proj-body">
+        <div class="proj-inner">
+          <div class="assess-grid">
+            <div class="assess-item"><div class="assess-label">🎯 Objective</div><div class="assess-val">Eliminate stockout events causing $15K+ in lost monthly revenue by building a predictive reorder system.</div></div>
+            <div class="assess-item"><div class="assess-label">📦 Data Used</div><div class="assess-val">Inventory on Hand, Daily Sales Velocity, Lead Times, FBA Storage Fees, Warehouse data across 5 fulfilment centres</div></div>
+            <div class="assess-item"><div class="assess-label">🔍 Methodology</div><div class="assess-val">Calculated Average Daily Sales Rate → Safety Stock Formula: (Max Daily Sales × Max Lead Time) − (Avg Daily Sales × Avg Lead Time) → Set reorder at 21-day threshold</div></div>
+            <div class="assess-item"><div class="assess-label">💡 Key Finding</div><div class="assess-val">11 SKUs had less than 14 days of stock with 200+ daily order velocity. 3 warehouses had aged inventory (180+ days) inflating storage fees by $4,200/month.</div></div>
+          </div>
+          <div class="tools-section">
+            <div class="tools-title">Tools & Usage</div>
+            <div class="tool-row"><span class="tool-name">Power Query</span><span class="tool-use">Automated daily data refresh from Seller Central export — calculated Days of Stock and Daily Sales Rate dynamically</span></div>
+            <div class="tool-row"><span class="tool-name">Excel</span><span class="tool-use">Conditional formatting for 🔴 Urgent / 🟡 Reorder / 🟢 OK flags. IF formula for aged inventory classification (91/181/365 day bands)</span></div>
+            <div class="tool-row"><span class="tool-name">Power BI</span><span class="tool-use">Inventory health dashboard with warehouse-level drill-down, FBA fee tracker, and reorder alert panel</span></div>
+            <div class="tool-row"><span class="tool-name">Python (Pandas)</span><span class="tool-use">Calculated safety stock and reorder points using NumPy; exported flagged SKUs to Excel for operations team</span></div>
+          </div>
+          <div class="proj-result">✅ $18K/month revenue protected · Stockouts reduced by 23% · Storage fee savings of $4,200/month from aged inventory clearance</div><a href="dashboard-inventory.html" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:var(--teal);color:#fff;padding:9px 18px;border-radius:4px;font-size:12px;font-weight:600;text-decoration:none;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">📦 Open Inventory Dashboard ↗</a>
+        </div>
+      </div>
     </div>
 
-    <div class="proj-card reveal" style="--pc:#7c3aed">
-      <div class="proj-tag">Root Cause Analysis · RCA Framework</div>
-      <div class="proj-title">Sales Decline Investigation — Electronics</div>
-      <div class="proj-desc">Investigated 18% MoM revenue decline using 5-Why analysis and Fishbone diagrams. Identified 3 root causes: Buy Box % drop (92%→61%), advertising budget exhaustion, and 9-day stockout on 2 top ASINs.</div>
-      <div class="proj-tools">
-        <span class="tool-chip">Excel Waterfall</span>
-        <span class="tool-chip">Power BI</span>
-        <span class="tool-chip">5-Why RCA</span>
-        <span class="tool-chip">Fishbone</span>
+    <!-- PROJECT 3 -->
+    <div class="proj-card reveal" style="--pc:#7c3aed" onclick="toggleProject(this)">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <div class="proj-tag">Root Cause Analysis · RCA Framework</div>
+          <div class="proj-title">Sales Decline Investigation — Electronics</div>
+          <div class="proj-desc">Investigated 18% MoM revenue decline using structured RCA frameworks and waterfall analysis.</div>
+          <div class="proj-tools">
+            <span class="tool-chip">Excel Waterfall</span><span class="tool-chip">Power BI</span><span class="tool-chip">5-Why RCA</span><span class="tool-chip">Fishbone</span>
+          </div>
+          <div class="tap-hint">▼ Tap to see full assessment</div>
+        </div>
+        <div class="proj-chevron">▼</div>
       </div>
-      <div class="proj-result">💡 $42K revenue recovered in following quarter post-implementation</div>
+      <div class="proj-body">
+        <div class="proj-inner">
+          <div class="assess-grid">
+            <div class="assess-item"><div class="assess-label">🎯 Objective</div><div class="assess-val">Investigate an 18% month-on-month revenue decline in the Electronics category during Q3 2024 and identify root causes.</div></div>
+            <div class="assess-item"><div class="assess-label">📦 Data Used</div><div class="assess-val">Monthly sales trend, Buy Box % history, Advertising spend data, Inventory levels, Competitor pricing data</div></div>
+            <div class="assess-item"><div class="assess-label">🔍 Methodology</div><div class="assess-val">Fishbone diagram to categorise causes → 5-Why analysis on each branch → Waterfall chart to quantify impact of each root cause on revenue</div></div>
+            <div class="assess-item"><div class="assess-label">💡 Root Causes Found</div><div class="assess-val">1. Buy Box % dropped 92%→61% (competitor repricing) · 2. Ad budget exhausted mid-month (ACoS 14%→24%) · 3. 2 top ASINs out of stock for 9 days</div></div>
+          </div>
+          <div class="tools-section">
+            <div class="tools-title">Tools & Usage</div>
+            <div class="tool-row"><span class="tool-name">Excel Waterfall</span><span class="tool-use">Quantified revenue impact of each root cause: stockout (-$18K), Buy Box loss (-$14K), ad overspend (-$8K)</span></div>
+            <div class="tool-row"><span class="tool-name">Power BI</span><span class="tool-use">Month-on-month trend chart with annotations, Buy Box % overlay, and advertising spend vs revenue correlation visual</span></div>
+            <div class="tool-row"><span class="tool-name">5-Why RCA</span><span class="tool-use">Drilled from "revenue declined" → "Buy Box lost" → "competitor lowered price" → "no repricing tool in place"</span></div>
+            <div class="tool-row"><span class="tool-name">Fishbone Diagram</span><span class="tool-use">Mapped causes across People, Process, Product, Platform dimensions for structured management presentation</span></div>
+          </div>
+          <div class="proj-result">💡 $42K revenue recovered in Q4 after implementing dynamic repricing, reorder triggers at 30-day stock, and capped daily ad budgets</div>
+        </div>
+      </div>
     </div>
 
-    <div class="proj-card reveal" style="--pc:var(--red)">
-      <div class="proj-tag">Advertising · ACoS · ROAS Optimisation</div>
-      <div class="proj-title">Advertising Efficiency — ACoS Reduction</div>
-      <div class="proj-desc">Analysed 30,000+ ad records across Sponsored Products, Brands & Display. Identified top 15% of keywords driving 73% of ad revenue. Paused bottom 40% high-ACoS keywords and reallocated budget to high-ROAS campaigns.</div>
-      <div class="proj-tools">
-        <span class="tool-chip">Seller Central</span>
-        <span class="tool-chip">Power BI</span>
-        <span class="tool-chip">Excel Pivot</span>
-        <span class="tool-chip">Keyword Analysis</span>
+    <!-- PROJECT 4 -->
+    <div class="proj-card reveal" style="--pc:var(--red)" onclick="toggleProject(this)">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <div class="proj-tag">Advertising · ACoS · ROAS Optimisation</div>
+          <div class="proj-title">Advertising Efficiency — ACoS Reduction</div>
+          <div class="proj-desc">Reduced blended ACoS from 24.3% to 17.1% across 30,000+ ad records in 6 weeks.</div>
+          <div class="proj-tools">
+            <span class="tool-chip">Seller Central</span><span class="tool-chip">Power BI</span><span class="tool-chip">Excel Pivot</span><span class="tool-chip">Python</span>
+          </div>
+          <div class="tap-hint">▼ Tap to see full assessment</div>
+        </div>
+        <div class="proj-chevron">▼</div>
       </div>
-      <div class="proj-result">📉 ACoS: 24.3% → 17.1% &nbsp;|&nbsp; ROAS: 4.1x → 5.8x in 6 weeks</div>
+      <div class="proj-body">
+        <div class="proj-inner">
+          <div class="assess-grid">
+            <div class="assess-item"><div class="assess-label">🎯 Objective</div><div class="assess-val">Reduce blended ACoS from 24.3% to below 18% while maintaining or growing advertising-driven revenue.</div></div>
+            <div class="assess-item"><div class="assess-label">📦 Data Used</div><div class="assess-val">30,000 ad records · Sponsored Products/Brands/Display · Impressions, Clicks, CTR, CPC, ACoS, TACoS, ROAS by ASIN and keyword</div></div>
+            <div class="assess-item"><div class="assess-label">🔍 Methodology</div><div class="assess-val">Segmented all keywords into ACoS bands (&lt;15%, 15-25%, 25-40%, &gt;40%) → Paused bottom 40% → Reallocated budget to top-performing campaigns</div></div>
+            <div class="assess-item"><div class="assess-label">💡 Key Finding</div><div class="assess-val">Top 15% of keywords drove 73% of ad sales. Bottom 40% contributed only 8% of revenue at 38% avg ACoS — pure budget drain.</div></div>
+          </div>
+          <div class="tools-section">
+            <div class="tools-title">Tools & Usage</div>
+            <div class="tool-row"><span class="tool-name">Amazon Seller Central</span><span class="tool-use">Downloaded bulk keyword reports, search term reports, and campaign performance data for analysis</span></div>
+            <div class="tool-row"><span class="tool-name">Excel Pivot Tables</span><span class="tool-use">Segmented 30K keywords by ACoS band, calculated budget allocation by campaign type (SP/SB/SD)</span></div>
+            <div class="tool-row"><span class="tool-name">Power BI</span><span class="tool-use">ACoS waterfall chart, weekly ROAS trend, CTR vs Conversion Rate scatter plot, top ASIN ad performance table</span></div>
+            <div class="tool-row"><span class="tool-name">Python (Pandas)</span><span class="tool-use">Automated weekly keyword ranking report — flagged keywords crossing ACoS threshold for immediate action</span></div>
+          </div>
+          <div class="proj-result">📉 ACoS: 24.3% → 17.1% · ROAS: 4.1x → 5.8x · Achieved in 6 weeks · Ad sales maintained while spend reduced by 18%</div>
+        </div>
+      </div>
     </div>
 
-    <div class="proj-card reveal" style="--pc:#d97706">
-      <div class="proj-tag">Vendor Analysis · MAP Compliance</div>
-      <div class="proj-title">Vendor Scorecard & MAP Compliance Tracker</div>
-      <div class="proj-desc">Developed vendor scorecard evaluating return rate, margin contribution, and revenue by supplier. Built MAP compliance tracker flagging 8 SKUs priced below minimum advertised price across 3 marketplaces.</div>
-      <div class="proj-tools">
-        <span class="tool-chip">XLOOKUP</span>
-        <span class="tool-chip">Conditional Formatting</span>
-        <span class="tool-chip">Power BI</span>
-        <span class="tool-chip">Pivot Tables</span>
+    <!-- PROJECT 5 -->
+    <div class="proj-card reveal" style="--pc:#d97706" onclick="toggleProject(this)">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <div class="proj-tag">Vendor Analysis · MAP Compliance</div>
+          <div class="proj-title">Vendor Scorecard & MAP Compliance Tracker</div>
+          <div class="proj-desc">Identified vendors driving 68% of returns and fixed 8 SKUs violating MAP pricing policy.</div>
+          <div class="proj-tools">
+            <span class="tool-chip">XLOOKUP</span><span class="tool-chip">Conditional Formatting</span><span class="tool-chip">Power BI</span><span class="tool-chip">Pivot Tables</span>
+          </div>
+          <div class="tap-hint">▼ Tap to see full assessment</div>
+        </div>
+        <div class="proj-chevron">▼</div>
       </div>
-      <div class="proj-result">📈 Margin improved 16.2% → 19.8% on flagged SKUs</div>
+      <div class="proj-body">
+        <div class="proj-inner">
+          <div class="assess-grid">
+            <div class="assess-item"><div class="assess-label">🎯 Objective</div><div class="assess-val">Identify underperforming vendors contributing to high return rates and identify SKUs violating MAP (Minimum Advertised Price) policy.</div></div>
+            <div class="assess-item"><div class="assess-label">📦 Data Used</div><div class="assess-val">100K order dataset · Vendor, Margin %, Return Status, FBA Fees, Profit · MAP threshold table · Competitor pricing data</div></div>
+            <div class="assess-item"><div class="assess-label">🔍 Methodology</div><div class="assess-val">Grouped orders by Vendor → Calculated Return Rate, Avg Margin, Revenue share → Compared Selling Price vs MAP → Flagged violations with conditional formatting</div></div>
+            <div class="assess-item"><div class="assess-label">💡 Key Finding</div><div class="assess-val">3 vendors caused 68% of returns with margins below 8%. 8 SKUs priced 12-22% below MAP. 5 SKUs priced 30%+ above market reducing conversion rate.</div></div>
+          </div>
+          <div class="tools-section">
+            <div class="tools-title">Tools & Usage</div>
+            <div class="tool-row"><span class="tool-name">Advanced Excel</span><span class="tool-use">XLOOKUP to match SKU prices against MAP table; Pivot Table for vendor-level return rate and margin aggregation</span></div>
+            <div class="tool-row"><span class="tool-name">Conditional Formatting</span><span class="tool-use">3-colour scale for margin health; Red flags for MAP violations; Traffic light system for vendor risk rating</span></div>
+            <div class="tool-row"><span class="tool-name">Power BI</span><span class="tool-use">Vendor Scorecard dashboard with Return Rate, Revenue, Margin, and MAP compliance status per supplier</span></div>
+            <div class="tool-row"><span class="tool-name">Pivot Tables</span><span class="tool-use">Cross-tabulated vendor × category performance; identified seasonal margin patterns by product type</span></div>
+          </div>
+          <div class="proj-result">📈 Margin improved 16.2% → 19.8% on flagged SKUs · Projected $28K annualised cost saving from vendor renegotiation · MAP compliance restored on all 8 SKUs</div>
+        </div>
+      </div>
     </div>
 
-    <div class="proj-card reveal" style="--pc:var(--green)">
-      <div class="proj-tag">BRD · Stakeholder Management · Automation</div>
-      <div class="proj-title">BRD — Automated MIS Reporting System</div>
-      <div class="proj-desc">Authored full Business Requirements Document for replacing a 3-hour manual Excel process with an automated daily MIS report. Defined functional requirements, acceptance criteria, UAT plan, and 6-week delivery timeline.</div>
-      <div class="proj-tools">
-        <span class="tool-chip">BRD Documentation</span>
-        <span class="tool-chip">Power BI</span>
-        <span class="tool-chip">Python</span>
-        <span class="tool-chip">SharePoint</span>
+    <!-- PROJECT 6 -->
+    <div class="proj-card reveal" style="--pc:var(--green)" onclick="toggleProject(this)">
+      <div class="proj-header">
+        <div class="proj-header-left">
+          <div class="proj-tag">BRD · Stakeholder Management · Automation</div>
+          <div class="proj-title">BRD — Automated MIS Reporting System</div>
+          <div class="proj-desc">Authored full Business Requirements Document replacing 3-hour manual Excel process with automated daily MIS.</div>
+          <div class="proj-tools">
+            <span class="tool-chip">BRD Documentation</span><span class="tool-chip">Power BI</span><span class="tool-chip">Python</span><span class="tool-chip">SharePoint</span>
+          </div>
+          <div class="tap-hint">▼ Tap to see full assessment</div>
+        </div>
+        <div class="proj-chevron">▼</div>
       </div>
-      <div class="proj-result">⏱ 65 man-hours/month saved · Real-time from T+1 day reporting</div>
+      <div class="proj-body">
+        <div class="proj-inner">
+          <div class="assess-grid">
+            <div class="assess-item"><div class="assess-label">🎯 Objective</div><div class="assess-val">Replace a 3-hour daily manual Excel reporting process with a fully automated MIS report delivered to 5 stakeholders by 9AM every day.</div></div>
+            <div class="assess-item"><div class="assess-label">👥 Stakeholders</div><div class="assess-val">Operations Manager · Finance Head · Supply Chain Lead · IT Team · Senior Leadership — all sign-off required</div></div>
+            <div class="assess-item"><div class="assess-label">🔍 Methodology</div><div class="assess-val">Requirements elicitation interviews → Functional & Non-Functional requirements documentation → UAT plan → 6-week delivery timeline → Stakeholder sign-off</div></div>
+            <div class="assess-item"><div class="assess-label">📋 BRD Contents</div><div class="assess-val">Business Need · Scope · Functional Requirements · Non-Functional Requirements · Acceptance Criteria · Timeline · Risk Register</div></div>
+          </div>
+          <div class="tools-section">
+            <div class="tools-title">Tools & Usage</div>
+            <div class="tool-row"><span class="tool-name">BRD Documentation</span><span class="tool-use">Wrote complete Business Requirements Document covering 9 sections — scope, functional reqs, non-functional reqs, UAT plan, acceptance criteria</span></div>
+            <div class="tool-row"><span class="tool-name">Power BI</span><span class="tool-use">Designed the automated dashboard layout — 10 KPI cards, trend charts, anomaly alerts if KPI deviates &gt;10% MoM</span></div>
+            <div class="tool-row"><span class="tool-name">Python</span><span class="tool-use">Data pipeline: auto-pull from Seller Central API → transform → push to Power BI dataset · Runs at 8AM daily</span></div>
+            <div class="tool-row"><span class="tool-name">SharePoint</span><span class="tool-use">Configured role-based access for 5 stakeholders; automated email distribution of daily PDF report snapshot</span></div>
+          </div>
+          <div class="proj-result">⏱ 65 man-hours/month saved · Reporting speed: T+1 day → Real-time · 100% stakeholder sign-off achieved · Zero manual data entry post-implementation</div>
+        </div>
+      </div>
     </div>
 
   </div>
 </section>
-
 <div class="divider"></div>
 
 <!-- ABOUT SECTION -->
@@ -686,8 +827,17 @@ footer a:hover{color:#fff;}
 // Scroll reveal
 const obs = new IntersectionObserver(entries=>{
   entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
-},{threshold:0.12});
+},{threshold:0.08});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Accordion toggle
+function toggleProject(card){
+  const isOpen = card.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.proj-card.open').forEach(c=>c.classList.remove('open'));
+  // Open clicked if it was closed
+  if(!isOpen) card.classList.add('open');
+}
 </script>
 </body>
 </html>

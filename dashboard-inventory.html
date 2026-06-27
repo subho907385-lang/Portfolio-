@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Inventory Health Dashboard · Amazon FBA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#F3F2F1;--surface:#fff;--navy:#252423;
+  --blue:#118DFF;--teal:#01B8AA;--green:#107C10;
+  --orange:#E66C37;--red:#E8445A;--gold:#F2C811;
+  --border:#E0DFDE;--text:#252423;--muted:#605E5C;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'Inter',sans-serif;font-size:13px;color:var(--text);min-height:100vh;}
+
+.topbar{background:var(--navy);color:#fff;height:44px;display:flex;align-items:center;padding:0 16px;gap:12px;position:sticky;top:0;z-index:100;}
+.topbar-logo{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;}
+.topbar-logo span{color:var(--gold);}
+.topbar-title{font-size:12px;color:#c8c6c4;border-left:1px solid #444;padding-left:12px;}
+.pbi-badge{margin-left:auto;background:var(--teal);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:3px;}
+
+/* TOOL BADGE ROW */
+.tool-bar{background:#fff;border-bottom:2px solid var(--teal);padding:8px 16px;display:flex;gap:8px;align-items:center;}
+.tool-badge{display:flex;align-items:center;gap:5px;background:var(--bg);border:1px solid var(--border);padding:4px 10px;border-radius:3px;font-size:10px;font-weight:600;color:var(--text);}
+.tool-badge .dot{width:8px;height:8px;border-radius:50%;}
+
+.filterbar{background:#fff;border-bottom:1px solid var(--border);padding:8px 16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.filter-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.filter-chip{background:#F3F2F1;border:1px solid var(--border);border-radius:3px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;color:var(--text);transition:all .15s;}
+.filter-chip.active{background:var(--teal);border-color:var(--teal);color:#fff;}
+
+main{padding:14px;max-width:1400px;margin:0 auto;}
+
+/* KPI CARDS */
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px;}
+.kpi{background:#fff;border:1px solid var(--border);border-left:4px solid var(--kc,var(--teal));padding:12px 14px;border-radius:3px;}
+.kpi-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;font-weight:600;}
+.kpi-val{font-size:20px;font-weight:700;color:var(--kc,var(--teal));line-height:1;font-family:'JetBrains Mono',monospace;}
+.kpi-sub{font-size:9px;color:var(--muted);margin-top:3px;}
+
+/* MAIN GRID */
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.chart-card{background:#fff;border:1px solid var(--border);border-radius:3px;padding:16px;}
+.card-title{font-size:12px;font-weight:600;margin-bottom:3px;}
+.card-sub{font-size:10px;color:var(--muted);margin-bottom:12px;}
+
+/* CONDITIONAL FORMATTING TABLE */
+.cf-table-wrap{background:#fff;border:1px solid var(--border);border-radius:3px;padding:16px;margin-bottom:12px;overflow-x:auto;}
+.cf-title{font-size:12px;font-weight:600;margin-bottom:3px;}
+.cf-sub{font-size:10px;color:var(--muted);margin-bottom:4px;}
+.cf-legend{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+.cf-leg-item{display:flex;align-items:center;gap:5px;font-size:10px;}
+.cf-dot{width:10px;height:10px;border-radius:2px;}
+.pq-badge{display:inline-block;background:#1565C0;color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:2px;margin-left:6px;}
+table{width:100%;border-collapse:collapse;min-width:700px;}
+th{text-align:left;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:7px 10px;border-bottom:2px solid var(--border);font-weight:600;white-space:nowrap;}
+td{padding:6px 10px;font-size:11px;border-bottom:1px solid #F3F2F1;}
+tr:hover td{background:#FAFAFA;}
+.td-num{font-family:'JetBrains Mono',monospace;font-size:11px;}
+/* Conditional formatting cells */
+.cf-urgent{background:#FDE7E9;color:#A4262C;font-weight:700;}
+.cf-reorder{background:#FFF4CE;color:#7D5B00;font-weight:600;}
+.cf-ok{background:#DFF6DD;color:#107C10;font-weight:500;}
+.cf-aged{background:#EDE8F8;color:#5B2D82;}
+.cf-aged-warn{background:#FDE7E9;color:#A4262C;}
+/* Data bar in cells */
+.data-bar{position:relative;display:flex;align-items:center;}
+.db-track{flex:1;height:14px;background:#F3F2F1;border-radius:2px;overflow:hidden;margin-right:6px;}
+.db-fill{height:100%;border-radius:2px;}
+.db-val{font-family:'JetBrains Mono',monospace;font-size:10px;min-width:40px;text-align:right;}
+
+/* BOTTOM ROW */
+.bottom-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+
+/* Reorder Formula Box */
+.formula-box{background:#F8F8F8;border:1px solid var(--border);border-radius:3px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.7;margin-top:12px;border-left:3px solid var(--teal);}
+.formula-comment{color:#107C10;}
+.formula-fn{color:#0070C0;}
+.formula-text{color:#252423;}
+
+.dash-footer{text-align:center;padding:12px;font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+@media(max-width:900px){.kpi-row{grid-template-columns:1fr 1fr 1fr;}.main-grid,.bottom-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">⬛ <span>Power BI</span></div>
+  <div class="topbar-title">Inventory Health & Reorder Optimisation · Amazon FBA · Subhajit Chowdhury</div>
+  <div class="pbi-badge">INVENTORY</div>
+</div>
+
+<div class="tool-bar">
+  <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-right:4px;">Tools Used:</span>
+  <div class="tool-badge"><div class="dot" style="background:#1565C0"></div>Power Query — Data Pipeline</div>
+  <div class="tool-badge"><div class="dot" style="background:#107C10"></div>Excel — Conditional Formatting</div>
+  <div class="tool-badge"><div class="dot" style="background:#118DFF"></div>Power BI — Dashboard</div>
+  <div class="tool-badge"><div class="dot" style="background:#E66C37"></div>IF Formula — Flag Logic</div>
+</div>
+
+<div class="filterbar">
+  <span class="filter-label">Warehouse:</span>
+  <button class="filter-chip active">All Warehouses</button>
+  <button class="filter-chip">FBA-ONT8</button>
+  <button class="filter-chip">FBA-MDW7</button>
+  <button class="filter-chip">FBA-RDU1</button>
+  <button class="filter-chip">FBA-PHX7</button>
+  <button class="filter-chip">FBA-SEA1</button>
+  <span class="filter-label" style="margin-left:auto">Status:</span>
+  <button class="filter-chip active">All</button>
+  <button class="filter-chip" style="background:#FDE7E9;border-color:#E8445A;color:#A4262C;">🔴 Urgent</button>
+  <button class="filter-chip" style="background:#FFF4CE;border-color:#F2C811;color:#7D5B00;">🟡 Reorder</button>
+  <button class="filter-chip" style="background:#DFF6DD;border-color:#107C10;color:#107C10;">🟢 OK</button>
+</div>
+
+<main>
+  <!-- KPI ROW -->
+  <div class="kpi-row">
+    <div class="kpi" style="--kc:#118DFF">
+      <div class="kpi-label">Total Inventory Value</div>
+      <div class="kpi-val">$4.1M</div>
+      <div class="kpi-sub">Across 5 warehouses</div>
+    </div>
+    <div class="kpi" style="--kc:#E8445A">
+      <div class="kpi-label">🔴 Urgent Reorders</div>
+      <div class="kpi-val">11</div>
+      <div class="kpi-sub">< 14 days of stock</div>
+    </div>
+    <div class="kpi" style="--kc:#E66C37">
+      <div class="kpi-label">🟡 Reorder Soon</div>
+      <div class="kpi-val">8</div>
+      <div class="kpi-sub">14–30 days of stock</div>
+    </div>
+    <div class="kpi" style="--kc:#107C10">
+      <div class="kpi-label">🟢 Healthy Stock</div>
+      <div class="kpi-val">81</div>
+      <div class="kpi-sub">> 30 days of stock</div>
+    </div>
+    <div class="kpi" style="--kc:#8764B8">
+      <div class="kpi-label">Aged Inventory</div>
+      <div class="kpi-val">14</div>
+      <div class="kpi-sub">SKUs > 180 days</div>
+    </div>
+    <div class="kpi" style="--kc:#01B8AA">
+      <div class="kpi-label">Revenue Protected</div>
+      <div class="kpi-val">$18K</div>
+      <div class="kpi-sub">Per month after fix</div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW -->
+  <div class="main-grid">
+    <div class="chart-card">
+      <div class="card-title">Inventory Days by Category <span class="pq-badge">Power Query</span></div>
+      <div class="card-sub">Average days of stock on hand · Reorder threshold = 21 days</div>
+      <canvas id="invDaysChart" height="200"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="card-title">FBA & Storage Fees by Warehouse <span class="pq-badge">Power BI</span></div>
+      <div class="card-sub">Monthly fee breakdown across 5 fulfilment centres</div>
+      <canvas id="feesChart" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- CONDITIONAL FORMATTING TABLE -->
+  <div class="cf-table-wrap">
+    <div class="cf-title">SKU Inventory Health Report <span class="pq-badge">Excel Conditional Formatting</span></div>
+    <div class="cf-sub">Colour-coded using IF formula: =IF(Days_of_Stock&lt;14,"🔴 URGENT",IF(Days_of_Stock&lt;30,"🟡 REORDER","🟢 OK"))</div>
+    <div class="cf-legend">
+      <div class="cf-leg-item"><div class="cf-dot" style="background:#FDE7E9;border:1px solid #E8445A"></div> 🔴 Urgent (&lt;14 days)</div>
+      <div class="cf-leg-item"><div class="cf-dot" style="background:#FFF4CE;border:1px solid #F2C811"></div> 🟡 Reorder (14–30 days)</div>
+      <div class="cf-leg-item"><div class="cf-dot" style="background:#DFF6DD;border:1px solid #107C10"></div> 🟢 OK (&gt;30 days)</div>
+      <div class="cf-leg-item"><div class="cf-dot" style="background:#EDE8F8;border:1px solid #8764B8"></div> 🟣 Aged Inventory</div>
+    </div>
+    <table>
+      <thead><tr><th>SKU</th><th>Product</th><th>Category</th><th>Warehouse</th><th>Stock on Hand</th><th>Daily Sales</th><th>Days of Stock</th><th>Inv Value</th><th>FBA Fee/mo</th><th>Status</th><th>Aged</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-num">SKU-001</td><td>Wireless Earbuds Pro</td><td>Electronics</td><td>FBA-ONT8</td>
+          <td><div class="data-bar"><div class="db-track"><div class="db-fill" style="width:10%;background:#E8445A"></div></div><div class="db-val">32</div></div></td>
+          <td class="td-num">2.8/day</td>
+          <td class="cf-urgent">11 days</td>
+          <td class="td-num">$832</td><td class="td-num">$89</td>
+          <td class="cf-urgent">🔴 URGENT</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td class="td-num">SKU-002</td><td>Bamboo Cutting Board</td><td>Kitchen</td><td>FBA-MDW7</td>
+          <td><div class="data-bar"><div class="db-track"><div class="db-fill" style="width:18%;background:#E8445A"></div></div><div class="db-val">56</div></div></td>
+          <td class="td-num">4.2/day</td>
+          <td class="cf-urgent">13 days</td>
+          <td class="td-num">$1,120</td><td class="td-num">$112</td>
+          <td class="cf-urgent">🔴 URGENT</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td class="td-num">SKU-003</td><td>Protein Shaker Bottle</td><td>Sports</td><td>FBA-RDU1</td>
+          <td><div class="data-bar"><div class="db-track"><div class="db-fill" style="width:30%;background:#E66C37"></div></div><div class="db-val">95</div></div></td>
+          <td class="td-num">3.8/day</td>
+          <td class="cf-reorder">25 days</td>
+          <td class="td-num">$1,330</td><td class="td-num">$95</td>
+          <td class="cf-reorder">🟡 REORDER</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td class="td-num">SKU-004</td><td>Smart LED Desk Lamp</td><td>Home & Office</td><td>FBA-PHX7</td>
+          <td><div class="data-bar"><div class="db-track"><div class="db-fill" style="width:45%;background:#107C10"></div></div><div class="db-val">142</div></div></td>
+          <td class="td-num">2.1/day</td>
+          <td class="cf-ok">68 days</td>
+          <td class="td-num">$2,556</td><td class="td-num">$71</td>
+          <td class="cf-ok">🟢 OK</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td class="td-num">SKU-005</td><td>USB-C Hub 7-in-1</td><td>Electronics</td><td>FBA-SEA1</td>
+          <td><div class="data-bar"><div class="db-track"><div class="db-fill" style="width:8%;background:#E8445A"></div></div><div class="db-val">24</div></div></td>
+          <td class="td-num">2.0/day</td>
+          <td class="cf-urgent">12 days</td>
+          <td class="td-num">$720</td><td class="td-num">$60</td>
+          <td class="cf-urgent">🔴 URGENT</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td class="td-num">SKU-006</td><td>Yoga Mat Non-Slip</td><td>Sports</td><td>FBA-ONT8</td>
+          <td><div class="data-bar"><div class="db-track"><div class="db-fill" style="width:60%;background:#107C10"></div></div><div class="db-val">188</div></div></td>
+          <td class="td-num">1.8/day</td>
+          <td class="cf-ok">104 days</td>
+          <td class="td-num">$2,632</td><td class="td-num">$94</td>
+          <td class="cf-ok">🟢 OK</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td class="td-num">SKU-007</td><td>Memory Foam Pillow</td><td>Bedding</td><td>FBA-MDW7</td>
+          <td><div class="data-bar"><div class="db-track"><div class="db-fill" style="width:100%;background:#8764B8"></div></div><div class="db-val">312</div></div></td>
+          <td class="td-num">0.4/day</td>
+          <td style="background:#EDE8F8;color:#5B2D82;font-weight:600;">780 days</td>
+          <td class="td-num">$9,984</td><td class="td-num">$312</td>
+          <td class="cf-ok">🟢 OK</td>
+          <td class="cf-aged-warn">Aged 180+</td>
+        </tr>
+        <tr>
+          <td class="td-num">SKU-008</td><td>Car Phone Mount</td><td>Automotive</td><td>FBA-RDU1</td>
+          <td><div class="data-bar"><div class="db-track"><div class="db-fill" style="width:25%;background:#E66C37"></div></div><div class="db-val">78</div></div></td>
+          <td class="td-num">3.1/day</td>
+          <td class="cf-reorder">25 days</td>
+          <td class="td-num">$936</td><td class="td-num">$62</td>
+          <td class="cf-reorder">🟡 REORDER</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td class="td-num">SKU-009</td><td>Cast Iron Skillet</td><td>Kitchen</td><td>FBA-PHX7</td>
+          <td><div class="data-bar"><div class="db-track"><div class="db-fill" style="width:55%;background:#107C10"></div></div><div class="db-val">174</div></div></td>
+          <td class="td-num">2.3/day</td>
+          <td class="cf-ok">76 days</td>
+          <td class="td-num">$3,480</td><td class="td-num">$87</td>
+          <td class="cf-ok">🟢 OK</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td class="td-num">SKU-010</td><td>Air Purifier HEPA</td><td>Home & Office</td><td>FBA-SEA1</td>
+          <td><div class="data-bar"><div class="db-track"><div class="db-fill" style="width:5%;background:#E8445A"></div></div><div class="db-val">16</div></div></td>
+          <td class="td-num">1.4/day</td>
+          <td class="cf-urgent">11 days</td>
+          <td class="td-num">$640</td><td class="td-num">$80</td>
+          <td class="cf-urgent">🔴 URGENT</td>
+          <td>Active</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BOTTOM ROW -->
+  <div class="bottom-row">
+    <div class="chart-card">
+      <div class="card-title">Stock Distribution by Status</div>
+      <div class="card-sub">SKU count by reorder flag</div>
+      <canvas id="statusChart" height="180"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="card-title">Inventory Turnover by Category <span class="pq-badge">Power Query</span></div>
+      <div class="card-sub">Units sold ÷ Avg inventory</div>
+      <canvas id="turnoverChart" height="180"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="card-title">Reorder Formula — Power Query Logic</div>
+      <div class="card-sub">Safety stock calculation used in this project</div>
+      <div class="formula-box">
+<span class="formula-comment">// Safety Stock Formula</span>
+<span class="formula-fn">= (Max_Daily_Sales * Max_Lead_Time)</span>
+<span class="formula-fn">  - (Avg_Daily_Sales * Avg_Lead_Time)</span>
+
+<span class="formula-comment">// Reorder Point</span>
+<span class="formula-fn">= Safety_Stock + (Avg_Daily_Sales
+    * Avg_Lead_Time)</span>
+
+<span class="formula-comment">// Excel IF Flag</span>
+<span class="formula-fn">=IF(Days_of_Stock&lt;14,</span>
+<span class="formula-text">   "🔴 URGENT",</span>
+<span class="formula-fn">  IF(Days_of_Stock&lt;30,</span>
+<span class="formula-text">   "🟡 REORDER","🟢 OK"))</span>
+      </div>
+      <div style="margin-top:12px;padding:10px;background:#DFF6DD;border-radius:3px;font-size:11px;color:#107C10;font-weight:500;">
+        ✅ Result: 11 URGENT SKUs flagged · Reorder triggers set at 21-day threshold · $18K/month revenue protected
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="dash-footer">Subhajit Chowdhury · Business Analyst · Inventory Health Dashboard · Tools: Power Query + Excel CF + Power BI</div>
+
+<script>
+const OPTS={responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#605E5C'}},y:{grid:{color:'#F3F2F1'},ticks:{font:{size:9},color:'#605E5C'}}}};
+
+// Inventory Days by Category
+new Chart(document.getElementById('invDaysChart'),{
+  type:'bar',
+  data:{
+    labels:['Kitchen','Sports','Electronics','Home & Office','Health','Bedding','Automotive'],
+    datasets:[{
+      label:'Days of Stock',
+      data:[68,45,28,82,54,210,38],
+      backgroundColor:['#107C10','#107C10','#E8445A','#107C10','#107C10','#8764B8','#E66C37'],
+      borderRadius:3
+    },{
+      type:'line',label:'Reorder Threshold (21d)',
+      data:[21,21,21,21,21,21,21],
+      borderColor:'#E8445A',borderDash:[5,5],borderWidth:2,pointRadius:0,fill:false
+    }]
+  },
+  options:{...OPTS,plugins:{legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:12}}}}
+});
+
+// Fees Chart
+new Chart(document.getElementById('feesChart'),{
+  type:'bar',
+  data:{
+    labels:['FBA-ONT8','FBA-MDW7','FBA-RDU1','FBA-PHX7','FBA-SEA1'],
+    datasets:[
+      {label:'FBA Fees',data:[3240,2890,2640,2980,2120],backgroundColor:'#118DFF',borderRadius:2,stack:'a'},
+      {label:'Storage Fees',data:[890,1240,680,740,520],backgroundColor:'#01B8AA',borderRadius:2,stack:'a'}
+    ]
+  },
+  options:{...OPTS,plugins:{legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:12}}},scales:{...OPTS.scales,x:{...OPTS.scales.x,stacked:true},y:{...OPTS.scales.y,stacked:true}}}
+});
+
+// Status Donut
+new Chart(document.getElementById('statusChart'),{
+  type:'doughnut',
+  data:{labels:['🟢 OK (81)','🟡 Reorder (8)','🔴 Urgent (11)'],datasets:[{data:[81,8,11],backgroundColor:['#107C10','#F2C811','#E8445A'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},
+  options:{responsive:true,cutout:'60%',plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:12,padding:10}}}}
+});
+
+// Turnover
+new Chart(document.getElementById('turnoverChart'),{
+  type:'bar',
+  data:{
+    labels:['Kitchen','Sports','Electronics','Home & Office','Health','Bedding','Automotive'],
+    datasets:[{label:'Turnover Rate',data:[5.4,6.8,8.2,4.1,5.9,1.4,3.2],backgroundColor:['#107C10','#107C10','#118DFF','#E66C37','#107C10','#E8445A','#E66C37'],borderRadius:3}]
+  },
+  options:{...OPTS,indexAxis:'y'}
+});
+</script>
+</body>
+</html>

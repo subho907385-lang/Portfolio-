@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Executive Business Dashboard · Amazon FBA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#F3F2F1;--surface:#fff;--navy:#252423;
+  --gold:#F2C811;--blue:#118DFF;--teal:#01B8AA;
+  --red:#E8445A;--green:#107C10;--orange:#E66C37;
+  --purple:#8764B8;--border:#E0DFDE;--text:#252423;
+  --muted:#605E5C;--sidebar:#201F1E;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'Inter',sans-serif;font-size:13px;color:var(--text);min-height:100vh;}
+
+/* TOP BAR */
+.topbar{background:var(--navy);color:#fff;height:44px;display:flex;align-items:center;padding:0 16px;gap:12px;position:sticky;top:0;z-index:100;}
+.topbar-logo{font-weight:700;font-size:14px;letter-spacing:.3px;display:flex;align-items:center;gap:8px;}
+.topbar-logo span{color:var(--gold);}
+.topbar-title{font-size:12px;color:#c8c6c4;border-left:1px solid #444;padding-left:12px;margin-left:4px;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.pbi-badge{background:var(--gold);color:#000;font-size:10px;font-weight:700;padding:3px 8px;border-radius:3px;letter-spacing:.5px;}
+.refresh-btn{background:rgba(255,255,255,.1);border:none;color:#fff;padding:5px 12px;border-radius:3px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;}
+
+/* FILTER BAR */
+.filterbar{background:#fff;border-bottom:1px solid var(--border);padding:8px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.filter-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-right:4px;}
+.filter-chip{background:#F3F2F1;border:1px solid var(--border);border-radius:3px;padding:4px 12px;font-size:11px;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;color:var(--text);}
+.filter-chip.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+.date-range{margin-left:auto;font-size:11px;color:var(--muted);background:#F3F2F1;padding:4px 12px;border-radius:3px;border:1px solid var(--border);}
+
+/* MAIN LAYOUT */
+main{padding:16px;max-width:1400px;margin:0 auto;}
+
+/* KPI CARDS */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px;}
+.kpi{background:#fff;border:1px solid var(--border);border-top:3px solid var(--kc,var(--blue));padding:14px 16px;border-radius:3px;position:relative;cursor:pointer;transition:box-shadow .15s;}
+.kpi:hover{box-shadow:0 2px 12px rgba(0,0,0,.1);}
+.kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;font-weight:600;}
+.kpi-val{font-size:24px;font-weight:700;color:var(--text);line-height:1;margin-bottom:4px;font-family:'JetBrains Mono',monospace;}
+.kpi-sub{font-size:10px;color:var(--muted);}
+.kpi-delta{position:absolute;top:12px;right:12px;font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;}
+.delta-up{background:#DFF6DD;color:var(--green);}
+.delta-dn{background:#FDE7E9;color:var(--red);}
+
+/* CHARTS GRID */
+.charts-row{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;margin-bottom:12px;}
+.charts-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.chart-card{background:#fff;border:1px solid var(--border);border-radius:3px;padding:16px;}
+.card-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.card-sub{font-size:10px;color:var(--muted);margin-bottom:14px;}
+canvas{width:100%!important;}
+
+/* TABLE */
+.table-card{background:#fff;border:1px solid var(--border);border-radius:3px;padding:16px;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:6px 10px;border-bottom:2px solid var(--border);font-weight:600;}
+td{padding:7px 10px;font-size:11px;border-bottom:1px solid #F3F2F1;}
+tr:hover td{background:#F8F8F8;}
+.td-num{font-family:'JetBrains Mono',monospace;font-size:11px;}
+.bar-inline{display:flex;align-items:center;gap:6px;}
+.bi-track{flex:1;background:#F3F2F1;border-radius:2px;height:8px;overflow:hidden;}
+.bi-fill{height:100%;border-radius:2px;}
+
+/* SLICER PANEL */
+.bottom-row{display:grid;grid-template-columns:200px 1fr 1fr;gap:12px;margin-bottom:12px;}
+.slicer{background:#fff;border:1px solid var(--border);border-radius:3px;padding:14px;}
+.slicer-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px;}
+.slicer-item{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;font-size:11px;border-bottom:1px solid #F3F2F1;}
+.slicer-item:last-child{border-bottom:none;}
+.slicer-cb{width:13px;height:13px;border:1.5px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;transition:all .15s;}
+.slicer-cb.checked{background:var(--blue);border-color:var(--blue);color:#fff;}
+.slicer-name{flex:1;}
+.slicer-count{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+
+/* FOOTER */
+.dash-footer{text-align:center;padding:12px;font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+
+@media(max-width:900px){
+  .kpi-row{grid-template-columns:1fr 1fr;}
+  .charts-row,.charts-row-3,.bottom-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">⬛ <span>Power BI</span></div>
+  <div class="topbar-title">Executive Business Dashboard · Amazon FBA · Subhajit Chowdhury</div>
+  <div class="topbar-right">
+    <button class="refresh-btn" onclick="refreshData()">↻ Refresh</button>
+    <div class="pbi-badge">LIVE</div>
+  </div>
+</div>
+
+<div class="filterbar">
+  <span class="filter-label">Marketplace:</span>
+  <button class="filter-chip active" onclick="setFilter(this,'all')">All</button>
+  <button class="filter-chip" onclick="setFilter(this,'amazon')">Amazon US</button>
+  <button class="filter-chip" onclick="setFilter(this,'walmart')">Walmart</button>
+  <button class="filter-chip" onclick="setFilter(this,'target')">Target</button>
+  <span class="filter-label" style="margin-left:12px">Period:</span>
+  <button class="filter-chip active" onclick="setPeriod(this,'18m')">18 Months</button>
+  <button class="filter-chip" onclick="setPeriod(this,'q')">This Quarter</button>
+  <button class="filter-chip" onclick="setPeriod(this,'ytd')">YTD</button>
+  <div class="date-range">📅 Jan 2024 – Jun 2025</div>
+</div>
+
+<main>
+  <!-- KPI ROW -->
+  <div class="kpi-row">
+    <div class="kpi" style="--kc:#118DFF">
+      <div class="kpi-label">Total Revenue</div>
+      <div class="kpi-val" id="kpi-rev">$8.24M</div>
+      <div class="kpi-sub">100,000 transactions</div>
+      <div class="kpi-delta delta-up">▲ 18.3%</div>
+    </div>
+    <div class="kpi" style="--kc:#107C10">
+      <div class="kpi-label">Net Profit</div>
+      <div class="kpi-val" id="kpi-prof">$1.09M</div>
+      <div class="kpi-sub">After all fees & costs</div>
+      <div class="kpi-delta delta-up">▲ 11.2%</div>
+    </div>
+    <div class="kpi" style="--kc:#F2C811">
+      <div class="kpi-label">Gross Margin</div>
+      <div class="kpi-val" id="kpi-margin">13.3%</div>
+      <div class="kpi-sub">Blended all categories</div>
+      <div class="kpi-delta delta-dn">▼ 0.8pp</div>
+    </div>
+    <div class="kpi" style="--kc:#01B8AA">
+      <div class="kpi-label">Units Sold</div>
+      <div class="kpi-val" id="kpi-units">261K</div>
+      <div class="kpi-sub">Across all SKUs</div>
+      <div class="kpi-delta delta-up">▲ 22.1%</div>
+    </div>
+    <div class="kpi" style="--kc:#E8445A">
+      <div class="kpi-label">Return Rate</div>
+      <div class="kpi-val" id="kpi-ret">9.0%</div>
+      <div class="kpi-sub">Platform average</div>
+      <div class="kpi-delta delta-dn">▼ 0.3pp</div>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi" style="--kc:#E66C37">
+      <div class="kpi-label">Avg Selling Price</div>
+      <div class="kpi-val">$20.64</div>
+      <div class="kpi-sub">Weighted average</div>
+    </div>
+    <div class="kpi" style="--kc:#8764B8">
+      <div class="kpi-label">Buy Box %</div>
+      <div class="kpi-val">77.1%</div>
+      <div class="kpi-sub">Platform average</div>
+      <div class="kpi-delta delta-dn">▼ 2.1pp</div>
+    </div>
+    <div class="kpi" style="--kc:#118DFF">
+      <div class="kpi-label">Conversion Rate</div>
+      <div class="kpi-val">15.0%</div>
+      <div class="kpi-sub">Sessions → Orders</div>
+    </div>
+    <div class="kpi" style="--kc:#01B8AA">
+      <div class="kpi-label">Total Orders</div>
+      <div class="kpi-val">186K</div>
+      <div class="kpi-sub">Across all channels</div>
+      <div class="kpi-delta delta-up">▲ 19.4%</div>
+    </div>
+    <div class="kpi" style="--kc:#107C10">
+      <div class="kpi-label">Inventory Value</div>
+      <div class="kpi-val">$4.1M</div>
+      <div class="kpi-sub">Current FBA stock</div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 1 -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="card-title">Monthly Revenue & Profit Trend</div>
+      <div class="card-sub">18-month rolling · Jan 2024 – Jun 2025 · Peak: Nov 2024</div>
+      <canvas id="trendChart" height="200"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="card-title">Revenue by Marketplace</div>
+      <div class="card-sub">Amazon US · Walmart · Target</div>
+      <canvas id="mktChart" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 2 -->
+  <div class="charts-row-3">
+    <div class="chart-card">
+      <div class="card-title">Revenue by Category</div>
+      <div class="card-sub">7 product categories</div>
+      <canvas id="catChart" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="card-title">Buy Box % Trend</div>
+      <div class="card-sub">Monthly average buy box win rate</div>
+      <canvas id="bbChart" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="card-title">Return Rate by Category</div>
+      <div class="card-sub">Platform-wide return analysis</div>
+      <canvas id="retChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- BOTTOM ROW: Slicer + Tables -->
+  <div class="bottom-row">
+    <div class="slicer">
+      <div class="slicer-title">Category Slicer</div>
+      <div class="slicer-item" onclick="toggleSlicer(this)">
+        <div class="slicer-cb checked">✓</div><span class="slicer-name">Kitchen</span><span class="slicer-count">22.6%</span>
+      </div>
+      <div class="slicer-item" onclick="toggleSlicer(this)">
+        <div class="slicer-cb checked">✓</div><span class="slicer-name">Sports</span><span class="slicer-count">21.0%</span>
+      </div>
+      <div class="slicer-item" onclick="toggleSlicer(this)">
+        <div class="slicer-cb checked">✓</div><span class="slicer-name">Electronics</span><span class="slicer-count">20.0%</span>
+      </div>
+      <div class="slicer-item" onclick="toggleSlicer(this)">
+        <div class="slicer-cb checked">✓</div><span class="slicer-name">Home & Office</span><span class="slicer-count">18.0%</span>
+      </div>
+      <div class="slicer-item" onclick="toggleSlicer(this)">
+        <div class="slicer-cb checked">✓</div><span class="slicer-name">Health</span><span class="slicer-count">10.0%</span>
+      </div>
+      <div class="slicer-item" onclick="toggleSlicer(this)">
+        <div class="slicer-cb checked">✓</div><span class="slicer-name">Bedding</span><span class="slicer-count">6.0%</span>
+      </div>
+      <div class="slicer-item" onclick="toggleSlicer(this)">
+        <div class="slicer-cb checked">✓</div><span class="slicer-name">Automotive</span><span class="slicer-count">2.4%</span>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="card-title" style="margin-bottom:12px">Top Products by Revenue</div>
+      <table>
+        <thead><tr><th>#</th><th>Product</th><th>Category</th><th>Revenue</th><th>Margin</th><th>Share</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Bamboo Cutting Board Set</td><td>Kitchen</td><td class="td-num">$421K</td><td class="td-num" style="color:var(--green)">14.2%</td><td><div class="bar-inline"><div class="bi-track"><div class="bi-fill" style="width:100%;background:#118DFF"></div></div><span>5.1%</span></div></td></tr>
+          <tr><td>2</td><td>Wireless Bluetooth Earbuds</td><td>Electronics</td><td class="td-num">$384K</td><td class="td-num" style="color:var(--green)">13.8%</td><td><div class="bar-inline"><div class="bi-track"><div class="bi-fill" style="width:91%;background:#118DFF"></div></div><span>4.7%</span></div></td></tr>
+          <tr><td>3</td><td>Protein Shaker Bottle</td><td>Sports</td><td class="td-num">$352K</td><td class="td-num" style="color:var(--green)">15.1%</td><td><div class="bar-inline"><div class="bi-track"><div class="bi-fill" style="width:84%;background:#118DFF"></div></div><span>4.3%</span></div></td></tr>
+          <tr><td>4</td><td>Smart LED Desk Lamp</td><td>Home & Office</td><td class="td-num">$318K</td><td class="td-num" style="color:var(--orange)">12.4%</td><td><div class="bar-inline"><div class="bi-track"><div class="bi-fill" style="width:76%;background:#118DFF"></div></div><span>3.9%</span></div></td></tr>
+          <tr><td>5</td><td>Yoga Mat Non-Slip</td><td>Sports</td><td class="td-num">$284K</td><td class="td-num" style="color:var(--green)">14.8%</td><td><div class="bar-inline"><div class="bi-track"><div class="bi-fill" style="width:67%;background:#118DFF"></div></div><span>3.4%</span></div></td></tr>
+          <tr><td>6</td><td>Stainless Steel Water Bottle</td><td>Sports</td><td class="td-num">$261K</td><td class="td-num" style="color:var(--orange)">11.9%</td><td><div class="bar-inline"><div class="bi-track"><div class="bi-fill" style="width:62%;background:#118DFF"></div></div><span>3.2%</span></div></td></tr>
+          <tr><td>7</td><td>USB-C Hub 7-in-1</td><td>Electronics</td><td class="td-num">$248K</td><td class="td-num" style="color:var(--green)">16.2%</td><td><div class="bar-inline"><div class="bi-track"><div class="bi-fill" style="width:59%;background:#118DFF"></div></div><span>3.0%</span></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-card">
+      <div class="card-title" style="margin-bottom:12px">Marketplace Performance</div>
+      <table>
+        <thead><tr><th>Marketplace</th><th>Revenue</th><th>Orders</th><th>Margin</th><th>Returns</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:600;color:#FF9900">Amazon US</td>
+            <td class="td-num">$4.86M</td><td class="td-num">110K</td>
+            <td class="td-num" style="color:var(--green)">13.4%</td>
+            <td class="td-num" style="color:var(--red)">9.1%</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:#0071DC">Walmart</td>
+            <td class="td-num">$2.31M</td><td class="td-num">52K</td>
+            <td class="td-num" style="color:var(--green)">13.2%</td>
+            <td class="td-num" style="color:var(--orange)">8.9%</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:#CC0000">Target</td>
+            <td class="td-num">$1.07M</td><td class="td-num">24K</td>
+            <td class="td-num" style="color:var(--orange)">13.1%</td>
+            <td class="td-num" style="color:var(--orange)">8.8%</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:14px">
+        <div class="card-title" style="margin-bottom:8px">Quarterly Revenue</div>
+        <canvas id="qtrChart" height="120"></canvas>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="dash-footer">Subhajit Chowdhury · Business Analyst · Amazon FBA Executive Dashboard · 100,000 Records · Power BI Style</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────
+const months = ['Jan\'24','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan\'25','Feb','Mar','Apr','May','Jun'];
+const revenue = [380,395,410,425,440,455,480,500,510,530,543,520,490,470,485,498,502,410];
+const profit  = [48,51,53,55,58,60,64,67,68,72,74,70,65,62,64,66,67,54];
+
+const mktLabels = ['Amazon US','Walmart','Target'];
+const mktData   = [4860,2310,1070];
+const mktColors = ['#FF9900','#0071DC','#CC0000'];
+
+const catLabels = ['Kitchen','Sports','Electronics','Home & Office','Health','Bedding','Automotive'];
+const catData   = [1862,1731,1648,1483,823,494,197];
+const catColors = ['#118DFF','#01B8AA','#F2C811','#E66C37','#8764B8','#E8445A','#107C10'];
+
+const bbData = [82,80,81,79,78,77,76,78,79,77,75,76,78,79,77,76,75,74];
+const retData = [8.8,8.9,9.0,9.1,8.9,9.0,9.1,9.2,9.1,9.0,8.9,9.0,9.1,9.2,9.0,8.9,9.1,9.0];
+const catRetData = [7.2,9.8,11.2,8.4,8.1,6.9,5.8];
+const qtrLabels = ['Q1 \'24','Q2 \'24','Q3 \'24','Q4 \'24','Q1 \'25','Q2 \'25'];
+const qtrData   = [1185,1320,1490,1593,1445,1210];
+
+const OPTS = {responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.dataset.label+': '+c.formattedValue}}},scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#605E5C'}},y:{grid:{color:'#F3F2F1'},ticks:{font:{size:9},color:'#605E5C'}}}};
+
+// Trend Chart
+new Chart(document.getElementById('trendChart'),{
+  type:'line',
+  data:{labels:months,datasets:[
+    {label:'Revenue ($K)',data:revenue,borderColor:'#118DFF',backgroundColor:'rgba(17,141,255,.08)',tension:.4,fill:true,pointRadius:3,pointBackgroundColor:'#118DFF',borderWidth:2},
+    {label:'Profit ($K)', data:profit, borderColor:'#107C10',backgroundColor:'rgba(16,124,16,.05)',tension:.4,fill:true,pointRadius:3,pointBackgroundColor:'#107C10',borderWidth:2}
+  ]},
+  options:{...OPTS,plugins:{legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:12}},tooltip:{mode:'index',intersect:false}}}
+});
+
+// Marketplace Donut
+new Chart(document.getElementById('mktChart'),{
+  type:'doughnut',
+  data:{labels:mktLabels,datasets:[{data:mktData,backgroundColor:mktColors,borderWidth:3,borderColor:'#fff',hoverOffset:8}]},
+  options:{responsive:true,cutout:'62%',plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:14,padding:14}},tooltip:{callbacks:{label:c=>' '+c.label+': $'+c.raw.toLocaleString()+'K'}}}}
+});
+
+// Category Bar
+new Chart(document.getElementById('catChart'),{
+  type:'bar',
+  data:{labels:catLabels,datasets:[{label:'Revenue ($K)',data:catData,backgroundColor:catColors,borderRadius:3,borderSkipped:false}]},
+  options:{...OPTS,indexAxis:'y',plugins:{legend:{display:false}}}
+});
+
+// Buy Box Line
+new Chart(document.getElementById('bbChart'),{
+  type:'line',
+  data:{labels:months,datasets:[{label:'Buy Box %',data:bbData,borderColor:'#F2C811',backgroundColor:'rgba(242,200,17,.08)',tension:.4,fill:true,pointRadius:2,borderWidth:2}]},
+  options:{...OPTS,scales:{...OPTS.scales,y:{...OPTS.scales.y,min:70,max:90,ticks:{callback:v=>v+'%',font:{size:9},color:'#605E5C'}}}}
+});
+
+// Return Rate Bar
+new Chart(document.getElementById('retChart'),{
+  type:'bar',
+  data:{labels:catLabels,datasets:[{label:'Return %',data:catRetData,backgroundColor:catRetData.map(v=>v>10?'#E8445A':v>8?'#E66C37':'#107C10'),borderRadius:3}]},
+  options:{...OPTS,plugins:{legend:{display:false}},scales:{...OPTS.scales,y:{...OPTS.scales.y,ticks:{callback:v=>v+'%',font:{size:9}}}}}
+});
+
+// Quarterly
+new Chart(document.getElementById('qtrChart'),{
+  type:'bar',
+  data:{labels:qtrLabels,datasets:[{label:'Revenue ($K)',data:qtrData,backgroundColor:['#E8E8E8','#E8E8E8','#E8E8E8','#118DFF','#E8E8E8','#E8E8E8'],borderRadius:2}]},
+  options:{...OPTS,plugins:{legend:{display:false}}}
+});
+
+// INTERACTIONS
+function setFilter(btn,mkt){
+  document.querySelectorAll('.filterbar .filter-chip').forEach(b=>{
+    if(['all','amazon','walmart','target'].includes(b.onclick.toString().match(/'(\w+)'/)?.[1])) b.classList.remove('active');
+  });
+  btn.classList.add('active');
+}
+function setPeriod(btn,p){btn.classList.add('active');}
+function toggleSlicer(item){item.querySelector('.slicer-cb').classList.toggle('checked');item.querySelector('.slicer-cb').textContent=item.querySelector('.slicer-cb').classList.contains('checked')?'✓':'';}
+function refreshData(){const b=document.querySelector('.refresh-btn');b.textContent='↻ Refreshing...';setTimeout(()=>b.textContent='↻ Refresh',1200);}
+</script>
+</body>
+</html>
