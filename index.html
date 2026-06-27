@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Subhajit Chowdhury · Amazon FBA Analytics Portfolio</title>
+<meta name="description" content="Business Analyst portfolio — Amazon FBA data analysis, Power BI dashboards, and case studies by Subhajit Chowdhury."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+/* ── TOKENS ─────────────────────────────────────────────── */
+:root{
+  --ink:    #0f1117;
+  --paper:  #f7f6f2;
+  --mid:    #e8e6df;
+  --muted:  #8a8880;
+  --rule:   #d4d1c8;
+  --amazon: #FF9900;
+  --amazon-dk:#c47700;
+  --teal:   #006B6B;
+  --teal-lt:#e0f0f0;
+  --red:    #c0392b;
+  --green:  #1a6e45;
+  --green-lt:#e2f0e8;
+  --mono: 'JetBrains Mono',monospace;
+  --display:'Syne',sans-serif;
+  --body:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.65;overflow-x:hidden;}
+
+/* ── TICKER ─────────────────────────────────────────────── */
+.ticker{background:var(--ink);color:var(--amazon);font-family:var(--mono);font-size:11px;padding:7px 0;overflow:hidden;white-space:nowrap;}
+.ticker-inner{display:inline-block;animation:tick 28s linear infinite;}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker span{margin:0 40px;opacity:.7;}
+.ticker span b{color:#fff;opacity:1;}
+
+/* ── NAV ─────────────────────────────────────────────────── */
+nav{position:sticky;top:0;z-index:100;background:rgba(247,246,242,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:56px;}
+.nav-logo{font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:-.3px;}
+.nav-logo span{color:var(--amazon);}
+.nav-links{display:flex;gap:28px;list-style:none;}
+.nav-links a{font-size:12px;font-weight:500;text-decoration:none;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;transition:color .2s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-cta{background:var(--amazon);color:#fff;font-size:12px;font-weight:600;padding:8px 18px;border-radius:4px;text-decoration:none;letter-spacing:.3px;transition:background .2s;}
+.nav-cta:hover{background:var(--amazon-dk);}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.hero{padding:80px 40px 60px;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:60px;align-items:start;}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.hero-eyebrow::before{content:'';display:block;width:28px;height:1px;background:var(--teal);}
+.hero-h1{font-family:var(--display);font-size:clamp(38px,5vw,64px);font-weight:800;line-height:1.05;letter-spacing:-2px;margin-bottom:24px;}
+.hero-h1 em{font-style:normal;color:var(--amazon);}
+.hero-body{font-size:16px;color:#3a3835;line-height:1.7;max-width:520px;margin-bottom:32px;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-primary{background:var(--ink);color:#fff;padding:13px 28px;border-radius:4px;font-weight:600;font-size:13px;text-decoration:none;transition:background .2s;}
+.btn-primary:hover{background:#2a2825;}
+.btn-outline{border:1.5px solid var(--rule);color:var(--ink);padding:12px 24px;border-radius:4px;font-weight:500;font-size:13px;text-decoration:none;transition:all .2s;}
+.btn-outline:hover{border-color:var(--ink);}
+
+/* ── STAT CARD STACK (hero right) ───────────────────────── */
+.stat-stack{display:flex;flex-direction:column;gap:12px;padding-top:12px;}
+.stat-card{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:18px 22px;display:flex;align-items:center;gap:16px;transition:transform .2s,box-shadow .2s;}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.07);}
+.stat-icon{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.stat-num{font-family:var(--display);font-size:26px;font-weight:800;line-height:1;}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.6px;}
+
+/* ── DIVIDER ─────────────────────────────────────────────── */
+.divider{height:1px;background:var(--rule);margin:0 40px;}
+.section-wrap{max-width:1180px;margin:0 auto;padding:72px 40px;}
+.section-eyebrow{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+.section-title{font-family:var(--display);font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-1px;margin-bottom:40px;line-height:1.15;}
+.section-title span{color:var(--amazon);}
+
+/* ── KPI GRID ─────────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:56px;}
+.kpi-card{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:24px 20px;border-top:3px solid var(--kc,var(--amazon));}
+.kpi-val{font-family:var(--display);font-size:32px;font-weight:800;line-height:1;color:var(--kc,var(--amazon));margin-bottom:6px;}
+.kpi-name{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;}
+.kpi-ctx{font-size:12px;color:#5a5855;}
+
+/* ── CHART: REVENUE BAR ──────────────────────────────────── */
+.charts-row{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;margin-bottom:24px;}
+.chart-box{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:28px;}
+.chart-head{margin-bottom:20px;}
+.chart-head h3{font-family:var(--display);font-size:17px;font-weight:700;letter-spacing:-.3px;}
+.chart-head p{font-size:12px;color:var(--muted);margin-top:3px;}
+.bar-list{display:flex;flex-direction:column;gap:13px;}
+.bl-row{display:flex;flex-direction:column;gap:4px;}
+.bl-meta{display:flex;justify-content:space-between;font-size:12px;}
+.bl-name{font-weight:500;}
+.bl-val{font-family:var(--mono);font-size:11px;color:var(--muted);}
+.bl-track{height:22px;background:var(--mid);border-radius:3px;overflow:hidden;}
+.bl-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.legend-dot{width:10px;height:10px;border-radius:2px;}
+
+/* ── DONUT ───────────────────────────────────────────────── */
+.donut-wrap{display:flex;align-items:center;justify-content:center;gap:32px;padding:12px 0;}
+.donut-svg{flex-shrink:0;}
+.donut-legend{display:flex;flex-direction:column;gap:10px;}
+.dl-item{display:flex;align-items:center;gap:8px;font-size:12px;}
+.dl-swatch{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+.dl-name{color:var(--ink);}
+.dl-pct{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;min-width:36px;text-align:right;}
+
+/* ── TREND SPARKLINE ─────────────────────────────────────── */
+.trend-full{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:28px;margin-bottom:24px;}
+.trend-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:24px;border:1px solid var(--rule);border-radius:6px;overflow:hidden;}
+.tk{padding:16px 20px;border-right:1px solid var(--rule);}
+.tk:last-child{border-right:none;}
+.tk-val{font-family:var(--display);font-size:22px;font-weight:800;}
+.tk-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:2px;}
+.sparkline-area{position:relative;height:160px;}
+svg.spark{width:100%;height:100%;}
+
+/* ── PROJECTS ─────────────────────────────────────────────── */
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.proj-card{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:28px;position:relative;overflow:hidden;transition:box-shadow .2s,transform .2s;}
+.proj-card:hover{box-shadow:0 12px 40px rgba(0,0,0,.09);transform:translateY(-3px);}
+.proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--pc,var(--amazon));}
+.proj-tag{font-family:var(--mono);font-size:10px;color:var(--pc,var(--amazon));text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.proj-title{font-family:var(--display);font-size:18px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px;}
+.proj-desc{font-size:13px;color:#4a4846;line-height:1.6;margin-bottom:16px;}
+.proj-tools{display:flex;gap:6px;flex-wrap:wrap;}
+.tool-chip{background:var(--mid);color:var(--ink);font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;letter-spacing:.3px;}
+.proj-result{margin-top:14px;padding:10px 14px;background:var(--green-lt);border-radius:5px;font-size:12px;color:var(--green);font-weight:500;}
+
+/* ── ABOUT ─────────────────────────────────────────────────── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
+.about-body{font-size:15px;line-height:1.75;color:#3a3835;margin-bottom:24px;}
+.skill-group{margin-bottom:20px;}
+.sg-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;}
+.sg-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.sg-chip{background:var(--mid);font-size:12px;padding:5px 12px;border-radius:20px;font-weight:500;}
+.timeline{border-left:2px solid var(--rule);padding-left:24px;display:flex;flex-direction:column;gap:24px;}
+.tl-item{}
+.tl-date{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:4px;}
+.tl-role{font-family:var(--display);font-size:15px;font-weight:700;margin-bottom:2px;}
+.tl-co{font-size:13px;color:var(--teal);font-weight:500;margin-bottom:6px;}
+.tl-desc{font-size:12px;color:#5a5855;line-height:1.6;}
+
+/* ── CTA BAND ────────────────────────────────────────────── */
+.cta-band{background:var(--ink);color:#fff;padding:72px 40px;text-align:center;}
+.cta-band h2{font-family:var(--display);font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1.5px;margin-bottom:14px;}
+.cta-band h2 span{color:var(--amazon);}
+.cta-band p{color:#a0a09a;font-size:15px;margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto;}
+.cta-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+.cta-main{background:var(--amazon);color:#fff;padding:14px 32px;border-radius:4px;font-weight:700;font-size:14px;text-decoration:none;transition:background .2s;}
+.cta-main:hover{background:var(--amazon-dk);}
+.cta-sec{border:1.5px solid rgba(255,255,255,.2);color:#fff;padding:13px 28px;border-radius:4px;font-size:13px;text-decoration:none;transition:border-color .2s;}
+.cta-sec:hover{border-color:#fff;}
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+footer{background:#0a0c0f;color:#4a4a4a;text-align:center;padding:24px 40px;font-size:11px;font-family:var(--mono);}
+footer a{color:#6a6a6a;text-decoration:none;}
+footer a:hover{color:#fff;}
+
+/* ── SCROLL ANIMATIONS ───────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:40px;}
+  .stat-stack{flex-direction:row;flex-wrap:wrap;}
+  .stat-card{flex:1;min-width:160px;}
+  .kpi-grid{grid-template-columns:1fr 1fr;}
+  .charts-row{grid-template-columns:1fr;}
+  .proj-grid{grid-template-columns:1fr;}
+  .about-grid{grid-template-columns:1fr;}
+  .trend-kpis{grid-template-columns:1fr;}
+  .tk{border-right:none;border-bottom:1px solid var(--rule);}
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .section-wrap,.hero{padding-left:20px;padding-right:20px;}
+  .divider{margin:0 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>TOTAL REVENUE <b>$8.24M</b></span>
+    <span>NET PROFIT <b>$1.09M</b></span>
+    <span>UNITS SOLD <b>261,432</b></span>
+    <span>GROSS MARGIN <b>13.3%</b></span>
+    <span>BUY BOX AVG <b>77.1%</b></span>
+    <span>RETURN RATE <b>9.0%</b></span>
+    <span>AVG SELLING PRICE <b>$20.64</b></span>
+    <span>DATASETS ANALYSED <b>100,000+ ROWS</b></span>
+    <span>TOTAL REVENUE <b>$8.24M</b></span>
+    <span>NET PROFIT <b>$1.09M</b></span>
+    <span>UNITS SOLD <b>261,432</b></span>
+    <span>GROSS MARGIN <b>13.3%</b></span>
+    <span>BUY BOX AVG <b>77.1%</b></span>
+    <span>RETURN RATE <b>9.0%</b></span>
+    <span>AVG SELLING PRICE <b>$20.64</b></span>
+    <span>DATASETS ANALYSED <b>100,000+ ROWS</b></span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SC<span>.</span>Analytics</div>
+  <ul class="nav-links">
+    <li><a href="#metrics">Metrics</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <a href="mailto:subhajit9073858@gmail.com" class="nav-cta">Hire Me</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">Amazon FBA · Business Analyst · Kolkata</div>
+    <h1 class="hero-h1">Turning seller<br/>data into <em>decisions</em><br/>that scale.</h1>
+    <p class="hero-body">I'm Subhajit Chowdhury — Business Analyst at Whole 9 Yards Global, specialising in Amazon FBA analytics, MIS reporting, Power BI dashboards, and turning 100,000-row datasets into executive-ready insights.</p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-primary">View Projects</a>
+      <a href="#about" class="btn-outline">About Me</a>
+      <a href="https://linkedin.com/in/" class="btn-outline">LinkedIn ↗</a>
+    </div>
+  </div>
+  <div class="stat-stack">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#fff8ee;">📦</div>
+      <div>
+        <div class="stat-num" style="color:var(--amazon);">$8.24M</div>
+        <div class="stat-lbl">Total Revenue Analysed</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#e8f5ee;">📈</div>
+      <div>
+        <div class="stat-num" style="color:var(--green);">100K+</div>
+        <div class="stat-lbl">Transaction Records</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#e8f0f5;">🏪</div>
+      <div>
+        <div class="stat-num" style="color:var(--teal);">3</div>
+        <div class="stat-lbl">Marketplaces (Amazon · Walmart · Target)</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#fff0f0;">⚙️</div>
+      <div>
+        <div class="stat-num" style="color:var(--red);">6</div>
+        <div class="stat-lbl">BA Case Studies Delivered</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- METRICS SECTION -->
+<section class="section-wrap" id="metrics">
+  <div class="section-eyebrow">Data Analysis · 100,000 Rows · FY 2024–2025</div>
+  <h2 class="section-title">Business <span>Performance</span> at a Glance</h2>
+
+  <!-- KPI GRID -->
+  <div class="kpi-grid reveal">
+    <div class="kpi-card" style="--kc:var(--amazon)">
+      <div class="kpi-name">Total Revenue</div>
+      <div class="kpi-val">$8.24M</div>
+      <div class="kpi-ctx">Across Amazon US, Walmart & Target</div>
+    </div>
+    <div class="kpi-card" style="--kc:var(--green)">
+      <div class="kpi-name">Net Profit</div>
+      <div class="kpi-val">$1.09M</div>
+      <div class="kpi-ctx">After COGS, FBA fees & advertising</div>
+    </div>
+    <div class="kpi-card" style="--kc:var(--teal)">
+      <div class="kpi-name">Units Sold</div>
+      <div class="kpi-val">261K</div>
+      <div class="kpi-ctx">Across 20 product SKUs</div>
+    </div>
+    <div class="kpi-card" style="--kc:#7c3aed">
+      <div class="kpi-name">Avg Buy Box %</div>
+      <div class="kpi-val">77.1%</div>
+      <div class="kpi-ctx">Platform-wide average</div>
+    </div>
+    <div class="kpi-card" style="--kc:#d97706">
+      <div class="kpi-name">Gross Margin</div>
+      <div class="kpi-val">13.3%</div>
+      <div class="kpi-ctx">Revenue minus all costs</div>
+    </div>
+    <div class="kpi-card" style="--kc:var(--teal)">
+      <div class="kpi-name">Avg Selling Price</div>
+      <div class="kpi-val">$20.64</div>
+      <div class="kpi-ctx">Weighted across all categories</div>
+    </div>
+    <div class="kpi-card" style="--kc:var(--red)">
+      <div class="kpi-name">Return Rate</div>
+      <div class="kpi-val">9.0%</div>
+      <div class="kpi-ctx">Overall platform return rate</div>
+    </div>
+    <div class="kpi-card" style="--kc:#0891b2">
+      <div class="kpi-name">Avg Conversion</div>
+      <div class="kpi-val">15.0%</div>
+      <div class="kpi-ctx">Sessions to orders ratio</div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 1 -->
+  <div class="charts-row reveal">
+    <!-- Revenue by Category Bar -->
+    <div class="chart-box">
+      <div class="chart-head">
+        <h3>Revenue by Category</h3>
+        <p>Total revenue contribution per product category · FY 2024–2025</p>
+      </div>
+      <div class="bar-list">
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Kitchen</span><span class="bl-val">$1,862,400 · 22.6%</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:100%;background:linear-gradient(90deg,#c47700,#FF9900)"></div></div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Sports</span><span class="bl-val">$1,731,200 · 21.0%</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:93%;background:linear-gradient(90deg,#005555,#006B6B)"></div></div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Electronics</span><span class="bl-val">$1,648,000 · 20.0%</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:88%;background:linear-gradient(90deg,#0e6994,#0ea5e9)"></div></div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Home & Office</span><span class="bl-val">$1,483,200 · 18.0%</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:80%;background:linear-gradient(90deg,#5b21b6,#7c3aed)"></div></div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Health</span><span class="bl-val">$823,200 · 10.0%</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:44%;background:linear-gradient(90deg,#be185d,#ec4899)"></div></div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Bedding</span><span class="bl-val">$494,400 · 6.0%</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:27%;background:linear-gradient(90deg,#92400e,#f59e0b)"></div></div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Automotive</span><span class="bl-val">$197,000 · 2.4%</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:11%;background:linear-gradient(90deg,#374151,#6b7280)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marketplace Donut -->
+    <div class="chart-box">
+      <div class="chart-head">
+        <h3>Revenue by Marketplace</h3>
+        <p>Split across Amazon US, Walmart & Target</p>
+      </div>
+      <div class="donut-wrap">
+        <svg class="donut-svg" width="160" height="160" viewBox="0 0 160 160">
+          <!-- Amazon US 59% -->
+          <circle cx="80" cy="80" r="56" fill="none" stroke="#e8e6df" stroke-width="28"/>
+          <circle cx="80" cy="80" r="56" fill="none" stroke="#FF9900" stroke-width="28"
+            stroke-dasharray="207.3 144.5" stroke-dashoffset="0" transform="rotate(-90 80 80)"/>
+          <!-- Walmart 28% -->
+          <circle cx="80" cy="80" r="56" fill="none" stroke="#0071DC" stroke-width="28"
+            stroke-dasharray="98.5 253.4" stroke-dashoffset="-207.3" transform="rotate(-90 80 80)"/>
+          <!-- Target 13% -->
+          <circle cx="80" cy="80" r="56" fill="none" stroke="#CC0000" stroke-width="28"
+            stroke-dasharray="45.7 306.1" stroke-dashoffset="-305.8" transform="rotate(-90 80 80)"/>
+          <text x="80" y="75" text-anchor="middle" font-family="Syne,sans-serif" font-size="22" font-weight="800" fill="#0f1117">59%</text>
+          <text x="80" y="93" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8a8880">Amazon US</text>
+        </svg>
+        <div class="donut-legend">
+          <div class="dl-item"><div class="dl-swatch" style="background:#FF9900"></div><span class="dl-name">Amazon US</span><span class="dl-pct">59% · $4.86M</span></div>
+          <div class="dl-item"><div class="dl-swatch" style="background:#0071DC"></div><span class="dl-name">Walmart</span><span class="dl-pct">28% · $2.31M</span></div>
+          <div class="dl-item"><div class="dl-swatch" style="background:#CC0000"></div><span class="dl-name">Target</span><span class="dl-pct">13% · $1.07M</span></div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;border-top:1px solid var(--rule);padding-top:18px;">
+        <div class="chart-head" style="margin-bottom:14px;"><h3 style="font-size:14px;">Marketplace Margin Comparison</h3></div>
+        <div class="bar-list">
+          <div class="bl-row">
+            <div class="bl-meta"><span class="bl-name">Amazon US</span><span class="bl-val">13.4% margin</span></div>
+            <div class="bl-track"><div class="bl-fill" style="width:67%;background:#FF9900"></div></div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-meta"><span class="bl-name">Walmart</span><span class="bl-val">13.2% margin</span></div>
+            <div class="bl-track"><div class="bl-fill" style="width:66%;background:#0071DC"></div></div>
+          </div>
+          <div class="bl-row">
+            <div class="bl-meta"><span class="bl-name">Target</span><span class="bl-val">13.1% margin</span></div>
+            <div class="bl-track"><div class="bl-fill" style="width:65%;background:#CC0000"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTHLY TREND -->
+  <div class="trend-full reveal">
+    <div class="chart-head"><h3>Monthly Revenue Trend · Jan 2024 – Jun 2025</h3><p>18-month rolling performance with seasonality peaks in Q4</p></div>
+    <div class="trend-kpis">
+      <div class="tk"><div class="tk-val" style="color:var(--amazon)">+31%</div><div class="tk-lbl">Peak Month Growth (Nov 2024)</div></div>
+      <div class="tk"><div class="tk-val" style="color:var(--green)">$543K</div><div class="tk-lbl">Best Month Revenue</div></div>
+      <div class="tk"><div class="tk-val" style="color:var(--teal)">Q4 2024</div><div class="tk-lbl">Strongest Quarter</div></div>
+    </div>
+    <div class="sparkline-area">
+      <svg class="spark" viewBox="0 0 900 140" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FF9900" stop-opacity=".18"/>
+            <stop offset="100%" stop-color="#FF9900" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <!-- Grid lines -->
+        <line x1="0" y1="35" x2="900" y2="35" stroke="#e8e6df" stroke-width="1"/>
+        <line x1="0" y1="70" x2="900" y2="70" stroke="#e8e6df" stroke-width="1"/>
+        <line x1="0" y1="105" x2="900" y2="105" stroke="#e8e6df" stroke-width="1"/>
+        <!-- Area fill -->
+        <path d="M0,105 L50,100 L100,92 L150,98 L200,88 L250,84 L300,90 L350,78 L400,72 L450,68 L500,58 L550,42 L600,28 L650,38 L700,48 L750,52 L800,44 L850,50 L900,55 L900,140 L0,140 Z" fill="url(#grad)"/>
+        <!-- Line -->
+        <path d="M0,105 L50,100 L100,92 L150,98 L200,88 L250,84 L300,90 L350,78 L400,72 L450,68 L500,58 L550,42 L600,28 L650,38 L700,48 L750,52 L800,44 L850,50 L900,55" fill="none" stroke="#FF9900" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- Peak dot -->
+        <circle cx="600" cy="28" r="5" fill="#FF9900"/>
+        <text x="600" y="18" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#FF9900">Peak Nov</text>
+        <!-- Month labels -->
+        <text x="0"   y="130" font-family="Inter" font-size="8" fill="#8a8880" text-anchor="middle">Jan'24</text>
+        <text x="150" y="130" font-family="Inter" font-size="8" fill="#8a8880" text-anchor="middle">Apr'24</text>
+        <text x="300" y="130" font-family="Inter" font-size="8" fill="#8a8880" text-anchor="middle">Jul'24</text>
+        <text x="450" y="130" font-family="Inter" font-size="8" fill="#8a8880" text-anchor="middle">Sep'24</text>
+        <text x="600" y="130" font-family="Inter" font-size="8" fill="#8a8880" text-anchor="middle">Nov'24</text>
+        <text x="750" y="130" font-family="Inter" font-size="8" fill="#8a8880" text-anchor="middle">Feb'25</text>
+        <text x="900" y="130" font-family="Inter" font-size="8" fill="#8a8880" text-anchor="middle">Jun'25</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ADVERTISING METRICS -->
+  <div class="charts-row reveal">
+    <div class="chart-box">
+      <div class="chart-head"><h3>Advertising Performance</h3><p>Sponsored Products · Brands · Display · 30,000 ad records</p></div>
+      <div class="bar-list">
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Sponsored Products</span><span class="bl-val">60% of spend · Best ROAS</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:100%;background:linear-gradient(90deg,#c47700,#FF9900)"></div></div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Sponsored Brands</span><span class="bl-val">25% of spend</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:66%;background:linear-gradient(90deg,#005555,#006B6B)"></div></div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Sponsored Display</span><span class="bl-val">15% of spend</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:40%;background:linear-gradient(90deg,#5b21b6,#7c3aed)"></div></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;">
+        <div style="background:var(--mid);border-radius:6px;padding:12px 14px;">
+          <div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--green);">5.8x</div>
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">ROAS (after optimisation)</div>
+        </div>
+        <div style="background:var(--mid);border-radius:6px;padding:12px 14px;">
+          <div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--red);">17.1%</div>
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">ACoS (down from 24.3%)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Products -->
+    <div class="chart-box">
+      <div class="chart-head"><h3>Top 5 Products by Revenue</h3><p>Best-selling ASINs across all marketplaces</p></div>
+      <div class="bar-list">
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Bamboo Cutting Board Set</span><span class="bl-val">Kitchen</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:100%;background:linear-gradient(90deg,#c47700,#FF9900)"></div></div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Wireless Bluetooth Earbuds</span><span class="bl-val">Electronics</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:91%;background:linear-gradient(90deg,#0e6994,#0ea5e9)"></div></div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Protein Shaker Bottle</span><span class="bl-val">Sports</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:84%;background:linear-gradient(90deg,#005555,#006B6B)"></div></div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Smart LED Desk Lamp</span><span class="bl-val">Home & Office</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:76%;background:linear-gradient(90deg,#5b21b6,#7c3aed)"></div></div>
+        </div>
+        <div class="bl-row">
+          <div class="bl-meta"><span class="bl-name">Yoga Mat Non-Slip 6mm</span><span class="bl-val">Sports</span></div>
+          <div class="bl-track"><div class="bl-fill" style="width:68%;background:linear-gradient(90deg,#be185d,#ec4899)"></div></div>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding:10px 14px;background:#fff8ee;border-radius:5px;font-size:12px;color:#92400e;">
+        ⚡ Top 5 SKUs contribute <strong>~42%</strong> of total revenue
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS SECTION -->
+<section class="section-wrap" id="projects">
+  <div class="section-eyebrow">Business Analyst · Case Studies</div>
+  <h2 class="section-title">Analytics <span>Projects</span></h2>
+
+  <div class="proj-grid">
+
+    <div class="proj-card reveal" style="--pc:var(--amazon)">
+      <div class="proj-tag">Dashboard · Power BI · Excel</div>
+      <div class="proj-title">Executive Business Dashboard</div>
+      <div class="proj-desc">Built a company-wide KPI dashboard tracking Revenue, Net Profit, Margin, Units Sold, Buy Box %, Conversion Rate, and Return Rate across 100,000+ transactions. Enabled real-time performance monitoring for senior leadership.</div>
+      <div class="proj-tools">
+        <span class="tool-chip">Power BI</span>
+        <span class="tool-chip">Advanced Excel</span>
+        <span class="tool-chip">Power Query</span>
+        <span class="tool-chip">XLOOKUP</span>
+      </div>
+      <div class="proj-result">📊 7 dashboards · 10 KPIs tracked · 18-month trend view</div>
+    </div>
+
+    <div class="proj-card reveal" style="--pc:var(--teal)">
+      <div class="proj-tag">Inventory · Forecasting · Automation</div>
+      <div class="proj-title">Inventory Health & Reorder Optimisation</div>
+      <div class="proj-desc">Built inventory model analysing stock on hand, days of stock, FBA fees, and storage fees across 5 fulfilment centres. Introduced colour-coded reorder flags (Urgent / Reorder / OK) using daily sales velocity forecasting.</div>
+      <div class="proj-tools">
+        <span class="tool-chip">Power Query</span>
+        <span class="tool-chip">Excel</span>
+        <span class="tool-chip">Power BI</span>
+        <span class="tool-chip">Conditional Formatting</span>
+      </div>
+      <div class="proj-result">✅ $18K/month revenue protected · Stockouts reduced by 23%</div>
+    </div>
+
+    <div class="proj-card reveal" style="--pc:#7c3aed">
+      <div class="proj-tag">Root Cause Analysis · RCA Framework</div>
+      <div class="proj-title">Sales Decline Investigation — Electronics</div>
+      <div class="proj-desc">Investigated 18% MoM revenue decline using 5-Why analysis and Fishbone diagrams. Identified 3 root causes: Buy Box % drop (92%→61%), advertising budget exhaustion, and 9-day stockout on 2 top ASINs.</div>
+      <div class="proj-tools">
+        <span class="tool-chip">Excel Waterfall</span>
+        <span class="tool-chip">Power BI</span>
+        <span class="tool-chip">5-Why RCA</span>
+        <span class="tool-chip">Fishbone</span>
+      </div>
+      <div class="proj-result">💡 $42K revenue recovered in following quarter post-implementation</div>
+    </div>
+
+    <div class="proj-card reveal" style="--pc:var(--red)">
+      <div class="proj-tag">Advertising · ACoS · ROAS Optimisation</div>
+      <div class="proj-title">Advertising Efficiency — ACoS Reduction</div>
+      <div class="proj-desc">Analysed 30,000+ ad records across Sponsored Products, Brands & Display. Identified top 15% of keywords driving 73% of ad revenue. Paused bottom 40% high-ACoS keywords and reallocated budget to high-ROAS campaigns.</div>
+      <div class="proj-tools">
+        <span class="tool-chip">Seller Central</span>
+        <span class="tool-chip">Power BI</span>
+        <span class="tool-chip">Excel Pivot</span>
+        <span class="tool-chip">Keyword Analysis</span>
+      </div>
+      <div class="proj-result">📉 ACoS: 24.3% → 17.1% &nbsp;|&nbsp; ROAS: 4.1x → 5.8x in 6 weeks</div>
+    </div>
+
+    <div class="proj-card reveal" style="--pc:#d97706">
+      <div class="proj-tag">Vendor Analysis · MAP Compliance</div>
+      <div class="proj-title">Vendor Scorecard & MAP Compliance Tracker</div>
+      <div class="proj-desc">Developed vendor scorecard evaluating return rate, margin contribution, and revenue by supplier. Built MAP compliance tracker flagging 8 SKUs priced below minimum advertised price across 3 marketplaces.</div>
+      <div class="proj-tools">
+        <span class="tool-chip">XLOOKUP</span>
+        <span class="tool-chip">Conditional Formatting</span>
+        <span class="tool-chip">Power BI</span>
+        <span class="tool-chip">Pivot Tables</span>
+      </div>
+      <div class="proj-result">📈 Margin improved 16.2% → 19.8% on flagged SKUs</div>
+    </div>
+
+    <div class="proj-card reveal" style="--pc:var(--green)">
+      <div class="proj-tag">BRD · Stakeholder Management · Automation</div>
+      <div class="proj-title">BRD — Automated MIS Reporting System</div>
+      <div class="proj-desc">Authored full Business Requirements Document for replacing a 3-hour manual Excel process with an automated daily MIS report. Defined functional requirements, acceptance criteria, UAT plan, and 6-week delivery timeline.</div>
+      <div class="proj-tools">
+        <span class="tool-chip">BRD Documentation</span>
+        <span class="tool-chip">Power BI</span>
+        <span class="tool-chip">Python</span>
+        <span class="tool-chip">SharePoint</span>
+      </div>
+      <div class="proj-result">⏱ 65 man-hours/month saved · Real-time from T+1 day reporting</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT SECTION -->
+<section class="section-wrap" id="about">
+  <div class="section-eyebrow">Background · Experience · Skills</div>
+  <h2 class="section-title">About <span>Me</span></h2>
+
+  <div class="about-grid">
+    <div>
+      <p class="about-body">I'm a Business Analyst based in Kolkata, West Bengal, specialising in Amazon FBA analytics, financial reporting, and data-driven decision-making. I work at Whole 9 Yards Global where I build dashboards, conduct root cause analyses, and translate messy datasets into clear, actionable business insights.</p>
+      <p class="about-body">My background in finance (PwC) gives me a strong foundation in data accuracy, reconciliation, and structured thinking — which I now apply to e-commerce and seller analytics.</p>
+
+      <div class="skill-group">
+        <div class="sg-label">Analytics & BI</div>
+        <div class="sg-chips">
+          <span class="sg-chip">Power BI</span>
+          <span class="sg-chip">Tableau</span>
+          <span class="sg-chip">Advanced Excel</span>
+          <span class="sg-chip">Power Query</span>
+          <span class="sg-chip">Power Pivot</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-label">Data & Programming</div>
+        <div class="sg-chips">
+          <span class="sg-chip">Python (Pandas)</span>
+          <span class="sg-chip">SQL</span>
+          <span class="sg-chip">XLOOKUP</span>
+          <span class="sg-chip">Pivot Tables</span>
+          <span class="sg-chip">MIS Reporting</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-label">Business Analysis</div>
+        <div class="sg-chips">
+          <span class="sg-chip">BRD Writing</span>
+          <span class="sg-chip">Root Cause Analysis</span>
+          <span class="sg-chip">KPI Monitoring</span>
+          <span class="sg-chip">Process Improvement</span>
+          <span class="sg-chip">Stakeholder Mgmt</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-date">May 2025 – Present</div>
+          <div class="tl-role">Business Analyst · Associate Level 2</div>
+          <div class="tl-co">Whole 9 Yards Global · Amazon FBA Company</div>
+          <div class="tl-desc">MIS reporting, Power BI dashboards, inventory forecasting, advertising analysis, vendor performance, and root cause analysis across 100K+ transaction records.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">March 2024 – May 2025</div>
+          <div class="tl-role">Finance Associate · BRS & Accounts Payable</div>
+          <div class="tl-co">PricewaterhouseCoopers (PwC) AC · Kolkata</div>
+          <div class="tl-desc">Bank reconciliations, end-to-end accounts payable, invoice processing, vendor payments, ledger matching, month-end close, and audit support.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">2022</div>
+          <div class="tl-role">Bachelor of Commerce</div>
+          <div class="tl-co">KK Das College of Commerce · CGPA 7.09</div>
+          <div class="tl-desc">Certification: Industrial Business Accountant (IBA) from ICA — GST, TDS, and financial reporting.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="cta-band">
+  <h2>Let's work on your <span>data</span> together.</h2>
+  <p>Open to Business Analyst roles at TCS, Accenture, Deloitte, EY, KPMG, Capgemini, Cognizant, Infosys, Wipro & Amazon.</p>
+  <div class="cta-row">
+    <a href="mailto:subhajit9073858@gmail.com" class="cta-main">📧 subhajit9073858@gmail.com</a>
+    <a href="https://linkedin.com/in/" class="cta-sec">LinkedIn Profile ↗</a>
+    <a href="tel:+919073858648" class="cta-sec">📞 +91 9073858648</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Subhajit Chowdhury &nbsp;·&nbsp; Kolkata, India &nbsp;·&nbsp;
+  <a href="mailto:subhajit9073858@gmail.com">subhajit9073858@gmail.com</a> &nbsp;·&nbsp;
+  Built for GitHub Pages</p>
+</footer>
+
+<script>
+// Scroll reveal
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
